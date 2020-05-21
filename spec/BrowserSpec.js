@@ -7,10 +7,13 @@ const timeout = 10 * 1000;
 const userId = process.env.TEST_USER;
 const userPass = process.env.TEST_PASSWORD;
 const userToken = process.env.TEST_TOKEN;
-const browser = process.env.TEST_BROWSER;
+let browser = process.env.TEST_BROWSER;
+browser = browser && browser.trim();
+
+console.log(`Browser: '${browser}'`);
 
 let driver;
-if (browser == 'ie') {
+if (browser === 'ie') {
     let capabilities = Capabilities.ie();
     capabilities.set("ignoreProtectedModeSettings", true);
     capabilities.set("ignoreZoomSetting", true);

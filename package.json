@@ -3,8 +3,8 @@
   "scripts": {
     "jasmine": "jasmine",
     "test": "jasmine",
-    "test-safari": "env TEST_BROWSER=safari jasmine",
-    "test-ie": "env TEST_BROWSER=ie jasmine"
+    "test-safari": "TEST_BROWSER=safari jasmine",
+    "test-ie": "set TEST_BROWSER=ie && jasmine"
   },
   "devDependencies": {
     "chromedriver": "^83.0.0",
