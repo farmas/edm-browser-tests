@@ -1,24 +1,26 @@
-// Require modules used in the logic below
 const {Builder, By, Key, until, Capabilities, } = require('selenium-webdriver');
-//const webdriver = require('selenium-webdriver');
 require('dotenv').config();
 require('chromedriver');
 require('iedriver');
-
-/*
-const driver = new Builder()
-    .forBrowser('internet explorer')
-    .build();
-*/
-let capabilities = Capabilities.ie();
-capabilities.set("ignoreProtectedModeSettings", true);
-capabilities.set("ignoreZoomSetting", true);
-const driver = new Builder().withCapabilities(capabilities).build();
 
 const timeout = 10 * 1000;
 const userId = process.env.TEST_USER;
 const userPass = process.env.TEST_PASSWORD;
 const userToken = process.env.TEST_TOKEN;
+const browser = process.env.TEST_BROWSER;
+
+let driver;
+if (browser == 'ie') {
+    let capabilities = Capabilities.ie();
+    capabilities.set("ignoreProtectedModeSettings", true);
+    capabilities.set("ignoreZoomSetting", true);
+    driver = new Builder().withCapabilities(capabilities).build();
+}
+else {
+    driver = new Builder()
+        .forBrowser(browser || 'chrome')
+        .build();
+}
 
 // Configure Jasmine's timeout value to account for longer tests.
 // Adjust this value if you find our tests failing due to timeouts.
@@ -33,7 +35,6 @@ var login = async function() {
     let passwordLocator = By.name('j_password');
     let submitLocator = By.name('_eventId_proceed');
 
-     // Load the login page
     await driver.get('https://apps-dev.admin.uw.edu/content-services-ui/');
 
     await driver.wait(until.elementLocated(usernameLocator), timeout);
@@ -71,14 +72,11 @@ var login = async function() {
 };
 
 describe("Basic browser tests", function() {
-    // Before every test, open a browser and login
-    // using the logic written above.
     beforeEach(async function() {
         await login();
         console.log('Test beginning.')
     });
 
-    // After each test, close the browser.
     afterAll(async function() {
         await driver.quit();
     });
