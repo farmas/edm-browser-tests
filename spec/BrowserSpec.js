@@ -1,7 +1,6 @@
 // Require modules used in the logic below
 const {Builder, By, Key, until} = require('selenium-webdriver');
-
-// You can use a remote Selenium Hub, but we are not doing that here
+require('dotenv').config();
 require('chromedriver');
 
 const driver = new Builder()
@@ -9,9 +8,9 @@ const driver = new Builder()
     .build();
 
 const timeout = 10 * 1000;
-const userId = process.env.USER;
-const userPass = process.env.PASS;
-const userToken = process.env.TOKEN;
+const userId = process.env.TEST_USER;
+const userPass = process.env.TEST_PASSWORD;
+const userToken = process.env.TEST_TOKEN;
 
 // Configure Jasmine's timeout value to account for longer tests.
 // Adjust this value if you find our tests failing due to timeouts.
