@@ -1,11 +1,19 @@
 // Require modules used in the logic below
-const {Builder, By, Key, until} = require('selenium-webdriver');
+const {Builder, By, Key, until, Capabilities, } = require('selenium-webdriver');
+//const webdriver = require('selenium-webdriver');
 require('dotenv').config();
 require('chromedriver');
+require('iedriver');
 
+/*
 const driver = new Builder()
-    .forBrowser('safari')
+    .forBrowser('internet explorer')
     .build();
+*/
+let capabilities = Capabilities.ie();
+capabilities.set("ignoreProtectedModeSettings", true);
+capabilities.set("ignoreZoomSetting", true);
+const driver = new Builder().withCapabilities(capabilities).build();
 
 const timeout = 10 * 1000;
 const userId = process.env.TEST_USER;
