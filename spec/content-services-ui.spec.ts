@@ -1,90 +1,31 @@
-const {Builder, By, Key, until, Capabilities, } = require('selenium-webdriver');
-require('dotenv').config();
-require('chromedriver');
-require('iedriver');
+import { By, until, WebDriver } from 'selenium-webdriver';
+import * as utils from './utils/WebDriverUtils';
 
-const timeout = 10 * 1000;
-const userId = process.env.TEST_USER;
-const userPass = process.env.TEST_PASSWORD;
-const userToken = process.env.TEST_TOKEN;
-let browser = process.env.TEST_BROWSER;
-browser = browser && browser.trim();
+const testUrl = 'https://apps-dev.admin.uw.edu/content-services-ui/';
 
-console.log(`Browser: '${browser}'`);
+describe("UUI web application", function() {
+    let driver: WebDriver;
 
-let driver;
-if (browser === 'ie') {
-    let capabilities = Capabilities.ie();
-    capabilities.set("ignoreProtectedModeSettings", true);
-    capabilities.set("ignoreZoomSetting", true);
-    driver = new Builder().withCapabilities(capabilities).build();
-}
-else {
-    driver = new Builder()
-        .forBrowser(browser || 'chrome')
-        .build();
-}
+    beforeAll(async () => {
+        driver = utils.startWebDriver();
 
-// Configure Jasmine's timeout value to account for longer tests.
-// Adjust this value if you find our tests failing due to timeouts.
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 50 * 1000;
-
-var sleep = function(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-var login = async function() {
-    let usernameLocator = By.name('j_username');
-    let passwordLocator = By.name('j_password');
-    let submitLocator = By.name('_eventId_proceed');
-
-    await driver.get('https://apps-dev.admin.uw.edu/content-services-ui/');
-
-    await driver.wait(until.elementLocated(usernameLocator), timeout);
-    await (await driver.findElement(usernameLocator)).sendKeys(userId, Key.TAB);
-    await sleep(1000);
-
-    await driver.wait(until.elementLocated(passwordLocator), timeout);
-    await (await driver.findElement(passwordLocator)).sendKeys(userPass);
-    await sleep(1000);
-
-    await driver.wait(until.elementLocated(submitLocator), timeout);
-    await (await driver.findElement(submitLocator)).click();
-    await sleep(1000);
-
-    let duoFrameLocator = By.id('duo_iframe');
-    let duoButtonLocator = By.css('.auth-button');
-    let duoPasscodeLocator = By.name('passcode');
-
-    await driver.wait(until.elementLocated(duoFrameLocator), timeout);
-    const dueFrame = await driver.findElement(duoFrameLocator);
-    await sleep(1000);
-    await driver.switchTo().frame(dueFrame);
-    await sleep(1000);
-
-    await driver.wait(until.elementLocated(duoButtonLocator), timeout);
-    await (await driver.findElement(duoButtonLocator)).click();
-    await sleep(1000);
-
-    await (await driver.findElement(duoPasscodeLocator)).sendKeys(userToken, Key.ENTER);
-    await sleep(1000);
-
-    await sleep(1000);
-    await driver.switchTo().parentFrame();
-    await sleep(1000);
-};
-
-describe("Basic browser tests", function() {
-    beforeEach(async function() {
-        await login();
-        console.log('Test beginning.')
+        await driver.get(testUrl);
+        await utils.ensureUserLoggedIn(driver);
     });
 
-    afterAll(async function() {
+    beforeEach(async function() {
+        await driver.get(testUrl);
+    });
+
+    afterAll(async () => {
         await driver.quit();
     });
 
     it("should execute fede's test", async function() {
-        await driver.wait(until.elementLocated(By.css('.uw-patch')), timeout);
+        await driver.wait(until.elementLocated(By.css('.uw-patch')), 10 * 1000);
+    });
+
+    it("should execute fede's second test", async function() {
+        await driver.wait(until.elementLocated(By.css('.uw-patch')), 10 * 1000);
     });
 });
