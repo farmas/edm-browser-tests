@@ -9,8 +9,7 @@ describe("UUI web application", function() {
     beforeAll(async () => {
         driver = utils.startWebDriver();
 
-        await driver.get(testUrl);
-        await utils.ensureUserLoggedIn(driver);
+        await utils.ensureUserLoggedIn(driver, testUrl);
     });
 
     beforeEach(async function() {

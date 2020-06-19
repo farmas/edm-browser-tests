@@ -39,7 +39,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function ensureUserLoggedIn(driver: WebDriver) {
+export async function ensureUserLoggedIn(driver: WebDriver, url: string) {
     if (isLoggedIn) {
         return;
     }
@@ -48,7 +48,7 @@ export async function ensureUserLoggedIn(driver: WebDriver) {
     let passwordLocator = By.name('j_password');
     let submitLocator = By.name('_eventId_proceed');
 
-    await driver.get('https://apps-dev.admin.uw.edu/content-services-ui/');
+    await driver.get(url);
 
     await driver.wait(until.elementLocated(usernameLocator), timeout);
     await (await driver.findElement(usernameLocator)).sendKeys(userId, Key.TAB);
