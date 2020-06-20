@@ -1,7 +1,7 @@
 import { By, until, WebDriver } from 'selenium-webdriver';
 import * as utils from './utils/WebDriverUtils';
 
-const testUrl = 'https://apps-dev.admin.uw.edu/content-services-ui/';
+const testUrl = 'https://apps-eval.admin.uw.edu/content-services-ui/';
 
 describe("UUI web application", function() {
     let driver: WebDriver;
